@@ -1,7 +1,7 @@
 // Gravisonde — SSE client helper
 // Connects to /api/metrics and yields AggregatedMetrics events.
 
-import { AggregatedMetrics, SSEEvent, SSEEventSchema } from "./metrics";
+import { AggregatedMetrics, AggregatedMetricsSchema, SSEEvent, SSEEventSchema } from "./metrics";
 
 export type MetricsStreamHandler = (metrics: AggregatedMetrics) => void;
 export type ErrorHandler = (err: Error) => void;

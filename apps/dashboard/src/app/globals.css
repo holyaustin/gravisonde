@@ -30,65 +30,59 @@
   }
 }
 
-@layer components {
-  .card {
-    @apply bg-surface-elevated border border-border rounded-xl p-6;
-  }
-
-  .metric-card {
-    @apply card flex flex-col gap-2;
-  }
-
-  .metric-value {
-    @apply text-3xl font-bold tabular-nums;
-  }
-
-  .metric-label {
-    @apply text-sm text-text-muted uppercase tracking-wide;
-  }
-
-  .badge {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border;
-  }
-
-  .badge-graviton {
-    @apply badge bg-emerald-500/20 text-emerald-400 border-emerald-500/30;
-  }
-
-  .badge-cool {
-    @apply badge bg-sky-500/20 text-sky-400 border-sky-500/30;
-  }
-
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors;
-  }
-
-  .btn-primary {
-    @apply btn bg-primary text-white hover:bg-primary-dark;
-  }
-
-  .btn-secondary {
-    @apply btn bg-surface-elevated text-text border border-border hover:bg-surface;
-  }
+/* Component utilities - use @utility for reusable patterns in v4 */
+@utility card {
+  @apply bg-surface-elevated border border-border rounded-xl p-6;
 }
 
-@layer utilities {
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: theme(--color-border) transparent;
-  }
+@utility metric-card {
+  @apply card flex flex-col gap-2;
+}
 
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
+@utility metric-value {
+  @apply text-3xl font-bold tabular-nums;
+}
 
-  .scrollbar-thin::-webkit-scrollbar-track {
-    background: transparent;
-  }
+@utility badge {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border;
+}
 
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: theme(--color-border);
-    border-radius: 3px;
-  }
+@utility badge-graviton {
+  @apply badge bg-emerald-500/20 text-emerald-400 border-emerald-500/30;
+}
+
+@utility badge-cool {
+  @apply badge bg-sky-500/20 text-sky-400 border-sky-500/30;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors;
+}
+
+@utility btn-primary {
+  @apply btn bg-primary text-white hover:bg-primary-dark;
+}
+
+@utility btn-secondary {
+  @apply btn bg-surface-elevated text-text border border-border hover:bg-surface;
+}
+
+/* Custom scrollbar */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: theme(--color-border) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: theme(--color-border);
+  border-radius: 3px;
 }

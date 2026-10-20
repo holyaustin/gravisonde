@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { BenchmarkRunSchema } from "@/lib/metrics";
+import { BenchmarkRunSchema, BenchmarkRun } from "@/lib/metrics";
 import crypto from "crypto";
 
 export const dynamic = "force-dynamic";

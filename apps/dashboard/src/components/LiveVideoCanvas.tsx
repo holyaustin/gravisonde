@@ -21,6 +21,7 @@ export function LiveVideoCanvas({ metrics, className }: LiveVideoCanvasProps) {
     const height = canvas.height;
 
     function draw() {
+      if (!ctx) return;
       const t = Date.now() / 1000;
       const fps = metrics?.fps ?? 0;
       const detections = metrics?.avgDetections ?? 0;

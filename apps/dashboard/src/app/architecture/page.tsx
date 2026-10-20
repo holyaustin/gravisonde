@@ -103,7 +103,7 @@ export default function ArchitecturePage() {
           provisions:
         </p>
         <ul className="list-disc list-inside space-y-1 text-text-muted leading-relaxed">
-          <li>EC2 instance (<code className="bg-surface-elevated px-1.5 py-0.5 rounded">c8g.xlarge</code>) with COOL AMI</td>
+          <li>EC2 instance (<code className="bg-surface-elevated px-1.5 py-0.5 rounded">c8g.xlarge</code>) with COOL AMI</li>
           <li>IAM instance profile (least privilege: CloudWatch + S3)</li>
           <li>CloudWatch Log Group + custom metric namespace</li>
           <li>S3 bucket for benchmark artifacts</li>

@@ -52,21 +52,6 @@ export function MetricsCharts({ metrics }: MetricsChartsProps) {
     );
   }
 
-  const customTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string; color: string }>; label?: string }) => {
-    if (!active || !payload) return null;
-    return (
-      <div className="bg-surface-elevated border border-border rounded-lg p-3 shadow-lg">
-        <p className="font-mono text-sm text-text-muted mb-2">{label}</p>
-        {payload.map((entry, i) => (
-          <p key={i} className="text-sm flex items-center gap-2" style={{ color: entry.color }}>
-            <span className="w-2 h-2 rounded-full" style={{ background: entry.color }} />
-            {entry.name}: {entry.value.toFixed(2)}
-          </p>
-        ))}
-      </div>
-    );
-  };
-
   return (
     <div className="flex-1 space-y-4">
       {/* FPS Chart */}
@@ -97,7 +82,7 @@ export function MetricsCharts({ metrics }: MetricsChartsProps) {
               tickFormatter={(v) => `${v}`}
               domain={[0, "auto"]}
             />
-            <Tooltip content={customTooltip} />
+            <Tooltip />
             <Legend wrapperStyle={{ paddingTop: 5 }} />
             <Area
               type="monotone"
@@ -139,7 +124,7 @@ export function MetricsCharts({ metrics }: MetricsChartsProps) {
               tickFormatter={(v) => `${v}ms`}
               domain={[0, "auto"]}
             />
-            <Tooltip content={customTooltip} />
+            <Tooltip />
             <Legend wrapperStyle={{ paddingTop: 5 }} />
             <Line
               type="monotone"
@@ -156,8 +141,8 @@ export function MetricsCharts({ metrics }: MetricsChartsProps) {
               name="p99"
               stroke="#f59e0b"
               strokeWidth={2}
-              dot={false}
               strokeDasharray="5 5"
+              dot={false}
               isAnimationActive={false}
             />
           </LineChart>
@@ -196,7 +181,8 @@ export function MetricsCharts({ metrics }: MetricsChartsProps) {
               tick={{ fill: "#64748b" }}
               domain={[0, "auto"]}
             />
-            <Tooltip content={customTooltip} />
+            <Tooltip />
+            <Legend wrapperStyle={{ paddingTop: 5 }} />
             <Area
               type="monotone"
               dataKey="detections"

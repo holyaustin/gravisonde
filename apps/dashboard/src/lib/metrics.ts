@@ -134,4 +134,4 @@ export const SSEEventSchema = z.object({
   ]),
 });
 
-export type SSEEvent = z.infer<SSEEventSchema>;
+export type SSEEvent = z.infer<typeof SSEEventSchema>;
