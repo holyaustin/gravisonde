@@ -12,10 +12,11 @@ import sys
 import os
 import csv
 
-# Ensure src is on path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+# Ensure cv-pipeline/src is on path (works regardless of CWD)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "apps", "cv-pipeline", "src"))
 
-from main import run_pipeline, init_collector
+from pipeline.main import run_pipeline
+from pipeline.metrics import init_collector
 
 
 class CSVCollector:
