@@ -1,0 +1,34 @@
+# Gravisonde — .gitignore
+
+# Dependencies
+node_modules/
+.env
+.env.local
+.env.production.local
+
+# Next.js
+.next/
+out/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+
+# AWS
+*.pem
+
+# LocalStack data
+localstack_data/
+
+# Claude Code local config
+.claude/
+

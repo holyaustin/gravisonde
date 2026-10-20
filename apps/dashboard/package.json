@@ -1,0 +1,38 @@
+{
+  "name": "gravisonde-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "next": "16.4.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "3.25.76",
+    "recharts": "2.15.1"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "5.7.3",
+    "tailwindcss": "4.3.3",
+    "@tailwindcss/postcss": "4.3.3",
+    "postcss": "8.5.1",
+    "eslint": "9.18.0",
+    "eslint-config-next": "16.4.2",
+    "vitest": "3.0.4",
+    "@testing-library/react": "16.2.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "jsdom": "26.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,26 @@
+# OpenCV 5 Pipeline — requirements for COOL AMI environment
+# Install in /opt/cool Python venv (Python 3.10/3.11/3.12)
+
+# Core OpenCV 5 (installed via COOL AMI at /opt/cool)
+# opencv-python==5.0.0.93  # pinned version from COOL
+
+# Scientific stack
+numpy==1.26.4
+opencv-contrib-python-headless==5.0.0.93
+
+# ONNX Runtime for OpenCV DNN engine
+onnxruntime==1.19.2
+
+# CloudWatch / S3
+boto3>=1.34.0,<1.36.0
+botocore>=1.34.0,<1.36.0
+
+# Utilities
+python-dotenv==1.0.1
+tqdm==4.66.5
+requests==2.32.3
+
+# Testing
+pytest==8.3.4
+pytest-mock==3.14.0
+pytest-asyncio==0.23.7

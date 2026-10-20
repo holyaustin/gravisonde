@@ -1,0 +1,45 @@
+# COOL pipeline image — built on the Cloud-Optimized OpenCV Library (COOL) AMI.
+#
+# The COOL AMI (AWS Marketplace) ships OpenCV 5.0 with Arm KleidiCV
+# optimizations pre-installed at /opt/cool. This Dockerfile layers our
+# pipeline code + Python deps on top of that runtime.
+#
+# Build on the EC2 instance itself (the COOL AMI) so the image inherits
+# the optimized OpenCV 5 binaries:
+#   docker build -f apps/cv-pipeline/Dockerfile.cool -t gravisonde-pipeline:cool .
+#
+# If the COOL AMI is unavailable, fall back to stock OpenCV 5:
+#   docker build -f apps/cv-pipeline/Dockerfile.stock -t gravisonde-pipeline:stock .
+
+FROM ubuntu:24.04 AS base
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
+
+# COOL runtime — installed by the COOL AMI at /opt/cool
+# If you are not on the COOL AMI, this is a no-op and the image falls back
+# to whatever OpenCV 5 is available on the host (stock).
+ENV PATH="/opt/cool/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/opt/cool/lib:${LD_LIBRARY_PATH:-}"
+
+# System deps (OpenCV needs these even on the COOL AMI)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-venv python3-pip \
+    libglib2.0-0 libsm6 libxext6 libxrender-dev libgl1-mesa-glx \
+    libgomp1 ffmpeg curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python dependencies (numpy, onnxruntime, boto3, etc.)
+COPY requirements.txt .
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --no-cache-dir --upgrade pip && \
+    /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+# Copy pipeline source
+COPY src/ ./src/
+
+# Default command
+CMD ["/opt/venv/bin/python", "-m", "pipeline.main"]
