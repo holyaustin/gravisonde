@@ -1,21 +1,21 @@
 # Local development image — runs on any CPU, uses stock OpenCV + Python
 # For the COOL vs Stock comparison on EC2, see Dockerfile.cool and Dockerfile.stock
 
-FROM public.ecr.aws/docker/library/node:22-alpine AS runner
-
+# FIX: Changed base image to Python on Alpine to support both apk and pip natively
+FROM python:3.11-alpine
 
 WORKDIR /app
 
 # Install system dependencies for OpenCV + ffmpeg
-# Optimized to save memory/RAM on slow connections
-RUN apt-get update && \
-    echo "Acquire::http::No-Cache true;" > /etc/apt/apt.conf.d/99no-cache && \
-    apt-get install -y --no-install-recommends \
-    libglib2.0-0 libsm6 libxext6 libxrender-dev libgl1 \
-    libgomp1 \
-    ffmpeg && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# FIX: Swapped apt-get to apk for Alpine compatibility and resource efficiency
+RUN apk update && apk add --no-cache \
+    glib \
+    libsm \
+    libxext \
+    libxrender \
+    mesa-gl \
+    libgomp \
+    ffmpeg
 
 # Install Python dependencies
 COPY requirements.txt .
