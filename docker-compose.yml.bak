@@ -1,0 +1,73 @@
+# Gravisonde — Local Development Stack
+# Spins up: Next.js dashboard, OpenCV pipeline (mock AWS), LocalStack
+# No AWS credentials required for local development.
+#
+# Usage: make local-up  →  http://localhost:3000
+
+services:
+  # ===========================================================================
+  # Next.js 16 Dashboard
+  # ===========================================================================
+  dashboard:
+    build:
+      context: ./apps/dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_AWS_REGION=us-east-1
+      - NEXT_PUBLIC_CW_LOG_GROUP=/aws/gravisonde/pipeline
+      - NEXT_PUBLIC_INSTANCE_TYPE=c8g.xlarge
+      - NEXT_PUBLIC_HOURLY_COST_USD=0.136
+      - NEXT_PUBLIC_S3_BUCKET=gravisonde-benchmarks-local
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    depends_on:
+      - localstack
+      - pipeline
+    restart: unless-stopped
+
+  # ===========================================================================
+  # OpenCV 5 Pipeline (mock CloudWatch + S3 via LocalStack)
+  # ===========================================================================
+  pipeline:
+    build:
+      context: ./apps/cv-pipeline
+      dockerfile: Dockerfile.local
+    environment:
+      - VIDEO_SOURCE=/data/sample.mp4
+      - AWS_REGION=us-east-1
+      - CW_LOG_GROUP=/aws/gravisonde/pipeline
+      - S3_BENCHMARK_BUCKET=gravisonde-benchmarks-local
+      - PIPELINE_MODE=cool
+      - DETECTION_MODEL=yolo11n.onnx
+      - CONF_THRESHOLD=0.5
+      - METRICS_PUSH_INTERVAL_SEC=10
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    volumes:
+      - ./sample_video.mp4:/data/sample.mp4:ro
+    depends_on:
+      - localstack
+    restart: unless-stopped
+
+  # ===========================================================================
+  # LocalStack — mock AWS (CloudWatch, S3, EC2, Pricing)
+  # ===========================================================================
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=cloudwatch,s3,ec2,pricing
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - localstack_data:/var/lib/localstack
+    restart: unless-stopped
+
+volumes:
+  localstack_data:

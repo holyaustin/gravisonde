@@ -11,7 +11,7 @@ services:
   dashboard:
     build:
       context: ./apps/dashboard
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     ports:
       - "3000:3000"
     environment:

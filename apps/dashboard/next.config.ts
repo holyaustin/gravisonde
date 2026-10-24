@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+   output: 'standalone',
   // Image optimization for demo assets
   images: {
     remotePatterns: [

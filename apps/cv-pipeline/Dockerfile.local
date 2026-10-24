@@ -1,32 +1,14 @@
-# Local development image — runs on any CPU, uses stock OpenCV + Python
-# For the COOL vs Stock comparison on EC2, see Dockerfile.cool and Dockerfile.stock
-
-# FIX: Changed base image to Python on Alpine to support both apk and pip natively
-FROM python:3.11-alpine
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies for OpenCV + ffmpeg
-# FIX: Swapped apt-get to apk for Alpine compatibility and resource efficiency
-RUN apk update && apk add --no-cache \
-    glib \
-    libsm \
-    libxext \
-    libxrender \
-    mesa-gl \
-    libgomp \
-    ffmpeg
-
-# Install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN --mount=type=bind,source=wheels,target=/wheels \
+    pip install --no-index --find-links=/wheels -r requirements.txt
 
-# Copy source
 COPY src/ ./src/
 
-# Environment
-ENV PYTHONPATH=/app
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1
 
-# Default command (can be overridden)
 CMD ["python", "-m", "src.pipeline.main"]

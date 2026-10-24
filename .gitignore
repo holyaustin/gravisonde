@@ -32,3 +32,4 @@ localstack_data/
 # Claude Code local config
 .claude/
 
+wheels/
