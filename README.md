@@ -1,6 +1,6 @@
 # Gravisonde — OpenCV 5 on AWS Graviton + COOL Performance Benchmark
 
-**Live performance benchmark proving OpenCV 5 on AWS Graviton (via the Cloud-Optimized OpenCV Library, COOL) delivers materially better fps-per-dollar than stock OpenCV on comparable x86 builds.**
+**yes**
 
 Built for the **OpenCV AI Competition 2026** — targets the **COOL Award ($1,000)**.
 
