@@ -58,7 +58,7 @@ services:
   # LocalStack — mock AWS (CloudWatch, S3, EC2, Pricing)
   # ===========================================================================
   localstack:
-    image: localstack/localstack:latest
+    image: localstack/localstack:3.8.1
     ports:
       - "4566:4566"
     environment:

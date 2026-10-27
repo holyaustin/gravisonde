@@ -95,6 +95,7 @@ class MetricsCollector:
         s3_bucket: Optional[str] = None,
         aws_region: str = "us-east-1",
         push_interval_sec: int = 10,
+        dashboard_endpoint: Optional[str] = None,
         max_buffer_size: int = 10000,
     ):
         self.instance_id = instance_id
@@ -109,6 +110,7 @@ class MetricsCollector:
         self.s3_bucket = s3_bucket
         self.aws_region = aws_region
         self.push_interval_sec = push_interval_sec
+        self.dashboard_endpoint = dashboard_endpoint or None
         self.max_buffer_size = max_buffer_size
 
         # In-memory ring buffer (last N frames)
@@ -129,8 +131,7 @@ class MetricsCollector:
         self._emitter_thread: Optional[threading.Thread] = None
         self._stop_emitter = threading.Event()
 
-        # HTTP endpoint for pushing to dashboard (optional)
-        self.dashboard_endpoint: Optional[str] = None
+        # HTTP endpoint for pushing to dashboard (optional) – already initialized above
 
     def _get_clients(self):
         """Lazy initialize AWS clients."""

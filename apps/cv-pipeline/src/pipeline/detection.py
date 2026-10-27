@@ -112,19 +112,38 @@ class Detector:
     @staticmethod
     def _init_feature_detector(detector_type: str):
         """Initialize OpenCV 5 Features2D detector."""
+        import os
         detector_type = detector_type.lower()
 
         if detector_type == "aliked":
             # ALIKED: CNN-based keypoint detector (new in OpenCV 5)
             if hasattr(cv2, "ALIKED_create"):
-                return cv2.ALIKED_create()
+                aliked_path = os.getenv("ALIKED_MODEL_PATH")
+                if aliked_path and os.path.isfile(aliked_path):
+                    try:
+                        return cv2.ALIKED_create(modelPath=aliked_path)
+                    except TypeError:
+                        try:
+                            return cv2.ALIKED_create()
+                        except TypeError:
+                            logger.warning("ALIKED_create signature unexpected, falling back to ORB")
+                else:
+                    logger.warning("ALIKED model path not set or file missing, falling back to ORB")
+                return cv2.ORB_create()
             else:
                 logger.warning("ALIKED not available, falling back to ORB")
                 return cv2.ORB_create()
         elif detector_type == "disk":
             # DISK: Learned features with reinforcement learning (new in OpenCV 5)
             if hasattr(cv2, "DISK_create"):
-                return cv2.DISK_create()
+                try:
+                    return cv2.DISK_create(modelPath="")
+                except TypeError:
+                    try:
+                        return cv2.DISK_create()
+                    except TypeError:
+                        logger.warning("DISK_create signature unexpected, falling back to ORB")
+                        return cv2.ORB_create()
             else:
                 logger.warning("DISK not available, falling back to ORB")
                 return cv2.ORB_create()
@@ -142,14 +161,22 @@ class Detector:
 
     def _init_matcher(self, use_lightglue: bool):
         """Initialize matcher - LightGlue is new in OpenCV 5."""
+        import os
         if use_lightglue and hasattr(cv2, "LightGlueMatcher_create"):
-            try:
-                return cv2.LightGlueMatcher_create()
-            except Exception as e:
-                logger.warning(f"Could not create LightGlueMatcher: {e}, falling back to BFMatcher")
+            lg_path = os.getenv("LIGHTGLUE_MODEL_PATH")
+            if lg_path and os.path.isfile(lg_path):
+                try:
+                    return cv2.LightGlueMatcher_create(modelPath=lg_path)
+                except TypeError:
+                    try:
+                        return cv2.LightGlueMatcher_create()
+                    except Exception as e:
+                        logger.warning(f"Could not create LightGlueMatcher: {e}, falling back to BFMatcher")
+            else:
+                logger.warning("LightGlue model path not set or file missing, falling back to BFMatcher")
 
-        # Fallback to BruteForce matcher
-        return cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
+        # Fallback to BruteForce matcher for ORB
+        return cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
     def detect_objects(self, frame: np.ndarray) -> List[Detection]:
         """

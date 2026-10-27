@@ -261,8 +261,11 @@ make local-down       # stops Docker compose (if running locally)
 
 - `docs/technical-report.mdx` — Competition entry write-up (problem, solution, differentiation, MVP, stretch features, responsible use)
 - `docs/architecture.mmd` — Mermaid diagram of the full architecture
+- `docs/ARCHITECTURE_OVERVIEW.mmd` — High-level overview diagram
 - `docs/reproduction-guide.md` — Step-by-step local + AWS reproduction steps
 - `docs/demo-script.md` — 4–5 minute judge demo walkthrough
+- `docs/COOL_EVIDENCE.md` — Additional evidence for Best Use of COOL Award
+- `docs/AGENTIC_VISION_NOTE.md` — Gap analysis for Agentic Vision Award
 - `DECISIONS.md` — Build decision log
 - `TODO.md` — Remaining deliverables
 

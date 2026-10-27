@@ -97,7 +97,9 @@ def run_pipeline(
 
             # Measure inference (detection + features) as t1 -> t2
             t1 = time.time()
-            detections, features = detector.process_frame(frame)
+            # VideoCapture returns Frame dataclass, detector expects ndarray
+            frame_image = frame.image if hasattr(frame, 'image') else frame
+            detections, features = detector.process_frame(frame_image)
             t2 = time.time()
 
             latency_ms = (t2 - t1) * 1000

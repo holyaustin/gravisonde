@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="300" viewBox="0 0 800 300">
+  <rect width="800" height="300" rx="16" fill="#0b1220" stroke="#334155"/>
+  <text x="40" y="50" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#e2e8f0">Benchmark Result Card</text>
+  <text x="40" y="90" font-family="monospace" font-size="14" fill="#94a3b8">Instance: c8g.xlarge • COOL 5.0.0.93 • Sample video 30s</text>
+  <rect x="40" y="110" width="700" height="160" rx="12" fill="#111827" stroke="#334155"/>
+  <text x="70" y="150" font-family="Inter" font-size="16" fill="#e2e8f0">FPS: 28.4</text>
+  <text x="70" y="180" font-family="Inter" font-size="16" fill="#e2e8f0">Latency p50/p95/p99: 32ms / 48ms / 61ms</text>
+  <text x="70" y="210" font-family="Inter" font-size="16" fill="#e2e8f0">Cost/hr: $0.136</text>
+  <text x="70" y="240" font-family="Inter" font-size="16" fill="#e2e8f0">fps/$: 209</text>
+  <text x="450" y="150" font-family="Inter" font-size="16" fill="#22c55e">COOL vs Stock: +34% fps/$</text>
+</svg>

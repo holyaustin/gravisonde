@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="#0b1220"/>
+  <rect x="60" y="80" width="1080" height="240" rx="24" fill="url(#g)" opacity="0.15" stroke="#6366f1" stroke-width="2"/>
+  <text x="200" y="180" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="700" fill="#e2e8f0">Gravisonde</text>
+  <text x="200" y="240" font-family="Inter, system-ui, sans-serif" font-size="28" fill="#94a3b8">OpenCV 5 + COOL on AWS Graviton • Live FPS-per-dollar benchmark</text>
+  <circle cx="1000" cy="200" r="80" fill="none" stroke="#0ea5e9" stroke-width="4" opacity="0.6"/>
+  <text x="960" y="210" font-family="monospace" font-size="18" fill="#e2e8f0">c8g.xlarge</text>
+</svg>

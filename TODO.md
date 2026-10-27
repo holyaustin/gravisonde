@@ -25,3 +25,34 @@ Status after the build-fix session: all code bugs fixed, environment noted. Netw
 
 - Sandbox blocks `registry.npmjs.org` and `pypi.org` — cannot verify builds from this session
 - `boto3>=1.34.0,<1.36.0` and `botocore>=1.34.0,<1.36.0` loosened for Python 3.10 compatibility in `apps/cv-pipeline/requirements.txt`
+
+
+Final reminder
+Final Submission Package
+    • A technical report describing the problem, users, architecture, OpenCV 5 implementation, AWS deployment, evaluation, limitations, and responsible-use considerations.
+
+    • A public or private judge-accessible code repository or archive. The code does not have to be open source.
+
+    • Pinned dependencies plus clear build, deployment, and test instructions.
+
+    • An architecture diagram showing the OpenCV 5 and AWS components and, where relevant, COOL or agent components.
+
+    • A working web endpoint or an arranged live screen-share demonstration.
+
+    • A public or unlisted judge-accessible video of no more than five minutes that shows the team, the application working, its architecture, and its principal results.
+
+    • Evaluation evidence appropriate to the project, including failure cases or limitations.
+
+Additional Evidence for the Best Use of COOL Award
+    • The COOL version and AWS instance or deployment configuration.
+
+    • A reproducible evaluation method, inputs, baselines, and results.
+
+    • Evidence that COOL executes the claimed core workload.
+
+Additional Evidence for the Agentic Vision Award
+    • An agent workflow diagram showing perception, decision or orchestration, and action.
+
+    • A trace or demonstration showing that OpenCV 5 output changes a later decision, tool call, or action.
+
+    • Evaluation of task success, failure handling, observability, and appropriate human con
