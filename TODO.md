@@ -10,15 +10,15 @@ Status after the build-fix session: all code bugs fixed, environment noted. Netw
 
 ## Remaining deliverables (in priority order)
 
-- [ ] **`docs/technical-report.mdx`** — competition entry write-up (problem, solution, differentiation, OpenCV 5 + AWS Graviton rationale, user journey, MVP table, stretch features, architecture, evidence/limitations, responsible use). Content already drafted in `src/app/report/page.tsx` — port/adapt into MDX.
-- [ ] **`docs/architecture.mmd`** — Mermaid diagram of the architecture (VPC, EC2 c8g.xlarge, IAM, S3, CloudWatch, ALB, pipeline, dashboard)
-- [ ] **`docs/reproduction-guide.md`** — step-by-step local dev + AWS deployment repro steps from `README.md` quick-start and CDK flow
-- [ ] **`docs/demo-script.md`** — demo walkthrough for the competition judges (what to click, what metrics to watch, COOL vs stock comparison narrative)
+- [x] **`docs/technical-report.mdx`** — exists as `docs/technical-report.md` (6.3 KB). Content drafted in `src/app/report/page.tsx`. Ready to rename to `.mdx` if needed.
+- [x] **`docs/architecture.mmd`** — exists (1.6 KB), created from docs/architecture.md
+- [x] **`docs/reproduction-guide.md`** — exists (3.6 KB)
+- [x] **`docs/demo-script.md`** — exists (3.0 KB)
 
 ## Optional polish
 
-- [ ] Generate a real `sample_video.mp4` at repo root (current file is 0 bytes; `docker-compose.yml` mounts it read-only into `/data/sample.mp4`)
-- [ ] `git init && git add -A && git commit` — repo currently has no commits
+- [x] Generate a real `sample_video.mp4` at repo root — file exists (3.4 MB)
+- [x] `git init && git add -A && git commit` — repo has 10 commits
 - [ ] `make benchmark` — COOL vs stock fps-per-dollar comparison on c8g.xlarge vs c7i.xlarge (needs AWS deployment)
 
 ## Known constraints to record

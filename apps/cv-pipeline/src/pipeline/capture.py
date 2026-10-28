@@ -45,6 +45,8 @@ class VideoCapture:
         self._cap: Optional[cv2.VideoCapture] = None
         self._frame_id = 0
         self._last_success = time.time()
+        self._consecutive_failures = 0
+        self._use_test_pattern = False
 
         self._connect()
 
@@ -57,8 +59,9 @@ class VideoCapture:
         self._cap = cv2.VideoCapture(self.source)
 
         if not self._cap.isOpened():
-            logger.warning(f"Failed to open {self.source}, trying test pattern")
+            logger.warning(f"Failed to open {self.source}, using test pattern")
             self._cap = self._create_test_pattern_capture()
+            self._use_test_pattern = True
 
         if self._cap.isOpened():
             # Set properties
@@ -66,6 +69,7 @@ class VideoCapture:
             self._cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
             self._cap.set(cv2.CAP_PROP_FPS, self.fps)
             logger.info(f"Connected to {self.source} ({self.width}x{self.height}@{self.fps}fps)")
+            self._consecutive_failures = 0
             return True
         else:
             logger.error(f"Cannot open video source: {self.source}")
@@ -103,6 +107,7 @@ class VideoCapture:
     def read(self) -> Tuple[bool, Optional[Frame]]:
         """
         Read next frame with automatic reconnect on failure.
+        Falls back to test pattern if video reading fails repeatedly.
 
         Returns:
             (success, frame) where frame is None if unsuccessful
@@ -113,13 +118,28 @@ class VideoCapture:
 
         ret, image = self._cap.read()
         if not ret or image is None:
-            logger.warning("Failed to read frame, attempting reconnect")
-            if not self._reconnect():
-                return False, None
-            # Try once more after reconnect
-            ret, image = self._cap.read()
-            if not ret or image is None:
-                return False, None
+            self._consecutive_failures += 1
+            logger.warning(f"Failed to read frame (attempt {self._consecutive_failures}/{self.reconnect_attempts})")
+
+            # After 3 failures, switch to test pattern permanently
+            if self._consecutive_failures >= 3 and not self._use_test_pattern:
+                logger.warning("Switching to test pattern mode due to repeated read failures")
+                self._cap = self._create_test_pattern_capture()
+                self._use_test_pattern = True
+                self._consecutive_failures = 0
+                # Try reading from test pattern
+                ret, image = self._cap.read()
+                if not ret or image is None:
+                    logger.error("Test pattern also failed")
+                    return False, None
+            else:
+                # Normal reconnect for video
+                if not self._reconnect():
+                    return False, None
+                # Try once more after reconnect
+                ret, image = self._cap.read()
+                if not ret or image is None:
+                    return False, None
 
         frame = Frame(
             image=image,
@@ -128,6 +148,7 @@ class VideoCapture:
         )
         self._frame_id += 1
         self._last_success = time.time()
+        self._consecutive_failures = 0  # Reset on success
 
         return True, frame
 

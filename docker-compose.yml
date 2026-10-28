@@ -62,7 +62,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=cloudwatch,s3,ec2,pricing
+      - SERVICES=cloudwatch,logs,s3,ec2,pricing
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:

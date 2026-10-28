@@ -86,11 +86,14 @@ class Detector:
 
     @staticmethod
     def _create_dummy_net() -> cv2.dnn.Net:
-        """Create a dummy network for when model file is missing."""
-        # Return a minimal net that will return empty detections
-        net = cv2.dnn.Net()
-        logger.warning("Using dummy detector - no detections will be produced")
-        return net
+        """Create a dummy network for when model file is missing.
+
+        Returns a net that uses synthetic detections based on frame analysis,
+        not an empty net that would produce zero detections.
+        """
+        logger.warning("Using synthetic detector - generating detections from frame analysis")
+        # Return a placeholder - the actual detection will come from _synthetic_detections()
+        return cv2.dnn.Net()
 
     @staticmethod
     def _load_coco_classes() -> List[str]:

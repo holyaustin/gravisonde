@@ -235,6 +235,12 @@ class MetricsCollector:
     def _push_to_cw_logs(self, metrics: List[FrameMetric]):
         """Push metrics as log events to CloudWatch Logs."""
         try:
+            # Ensure log group exists
+            try:
+                self._cw_logs.create_log_group(logGroupName=self.cw_log_group)
+            except self._cw_logs.exceptions.ResourceAlreadyExistsException:
+                pass
+
             # Ensure log stream exists
             stream_name = f"{self.instance_id}-{datetime.now().strftime('%Y-%m-%d')}"
             try:
