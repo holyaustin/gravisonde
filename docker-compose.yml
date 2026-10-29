@@ -33,9 +33,11 @@ services:
   # OpenCV 5 Pipeline (mock CloudWatch + S3 via LocalStack)
   # ===========================================================================
   pipeline:
+    cpus: 1.5
     build:
       context: ./apps/cv-pipeline
       dockerfile: Dockerfile.local
+    command: ["python", "-m", "src.pipeline.main", "--dashboard-endpoint", "http://dashboard:3000/api/metrics"]
     environment:
       - VIDEO_SOURCE=/data/sample.mp4
       - AWS_REGION=us-east-1
@@ -49,7 +51,7 @@ services:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
     volumes:
-      - ./sample_video.mp4:/data/sample.mp4:ro
+      - ./data/sample1.mp4:/data/sample.mp4:ro
     depends_on:
       - localstack
     restart: unless-stopped

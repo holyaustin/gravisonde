@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class FrameMetric:
     """Per-frame metric emitted by the pipeline."""
-    ts: float                    # time.time()
+    ts: float                    # time.time() * 1000 for dashboard (milliseconds)
     frame_id: int
     latency_ms: float            # End-to-end: capture -> detection -> emit
     inference_ms: float          # DNN forward pass only
@@ -38,7 +38,7 @@ class FrameMetric:
         for key, value in d.items():
             parts = key.split("_")
             camel = parts[0] + "".join(p.capitalize() for p in parts[1:])
-            out[camel] = value
+            out[camel] = value if value is not None else None
         return out
 
 @dataclass
@@ -70,7 +70,7 @@ class BenchmarkRun:
         for key, value in d.items():
             parts = key.split("_")
             camel = parts[0] + "".join(p.capitalize() for p in parts[1:])
-            out[camel] = value
+            out[camel] = value if value is not None else None
         return out
 
 
@@ -175,7 +175,7 @@ class MetricsCollector:
     ):
         """Record a single frame metric."""
         metric = FrameMetric(
-            ts=time.time(),
+            ts=time.time() * 1000.0,
             frame_id=frame_id,
             latency_ms=latency_ms,
             inference_ms=inference_ms,
@@ -196,9 +196,9 @@ class MetricsCollector:
 
         # Optionally push to dashboard HTTP endpoint
         if self.dashboard_endpoint:
-            self._push_to_dashboard(metric)
+            self._push_to_dashboard(metric.to_dict())
 
-    def _push_to_dashboard(self, metric: FrameMetric):
+    def _push_to_dashboard(self, metric_dict: dict):
         """Push metric to dashboard HTTP endpoint (fire-and-forget)."""
         import threading
         def _post():
@@ -206,7 +206,7 @@ class MetricsCollector:
                 import requests
                 requests.post(
                     self.dashboard_endpoint,
-                    json=metric.to_dict(),
+                    json=metric_dict,
                     timeout=1.0
                 )
             except Exception:
@@ -255,7 +255,7 @@ class MetricsCollector:
             events = []
             for m in metrics:
                 events.append({
-                    "timestamp": int(m.ts * 1000),
+                    "timestamp": int(m.ts),
                     "message": json.dumps(m.to_dict())
                 })
 
@@ -282,7 +282,8 @@ class MetricsCollector:
             # Calculate aggregates
             latencies = [m.latency_ms for m in metrics]
             latencies.sort()
-            fps = len(metrics) / (metrics[-1].ts - metrics[0].ts) if len(metrics) > 1 else 0
+            # ts is in milliseconds
+            fps = len(metrics) / ((metrics[-1].ts - metrics[0].ts) / 1000.0) if len(metrics) > 1 else 0
             avg_detections = sum(m.detections for m in metrics) / len(metrics)
 
             def percentile(data: List[float], p: float) -> float:
@@ -418,7 +419,8 @@ class MetricsCollector:
             return data[min(idx, len(data) - 1)]
 
         run.frame_count = len(frames)
-        run.avg_fps = len(frames) / (frames[-1].ts - frames[0].ts) if len(frames) > 1 else 0
+        # ts is in milliseconds
+        run.avg_fps = len(frames) / ((frames[-1].ts - frames[0].ts) / 1000.0) if len(frames) > 1 else 0
         run.p50_latency_ms = percentile(latencies, 50)
         run.p95_latency_ms = percentile(latencies, 95)
         run.p99_latency_ms = percentile(latencies, 99)
@@ -484,7 +486,8 @@ class MetricsCollector:
                 idx = int(len(data) * p / 100)
                 return data[min(idx, len(data) - 1)]
 
-            fps = len(frames) / (frames[-1].ts - frames[0].ts) if len(frames) > 1 else 0
+            # ts is in milliseconds
+            fps = len(frames) / ((frames[-1].ts - frames[0].ts) / 1000.0) if len(frames) > 1 else 0
             avg_detections = sum(f.detections for f in frames) / len(frames)
 
             return {
@@ -499,8 +502,8 @@ class MetricsCollector:
                 "arch": self.arch,
                 "pipeline": self.pipeline,
                 "sampleCount": len(frames),
-                "windowStart": int(frames[0].ts * 1000) if frames else 0,
-                "windowEnd": int(frames[-1].ts * 1000) if frames else 0,
+                "windowStart": int(frames[0].ts) if frames else 0,
+                "windowEnd": int(frames[-1].ts) if frames else 0,
             }
 
 

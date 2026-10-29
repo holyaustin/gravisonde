@@ -14,7 +14,7 @@ export const FrameMetricSchema = z.object({
   detections: z.number().describe("Object count in frame"),
   instanceId: z.string().describe("EC2 instance-id"),
   opencvVersion: z.string().describe("e.g. 5.0.0.93"),
-  coolVersion: z.string().optional().describe("COOL commit/version if detectable"),
+  coolVersion: z.union([z.string(), z.null()]).optional().describe("COOL commit/version if detectable"),
   arch: z.enum(["graviton", "x86"]),
   pipeline: z.enum(["cool", "stock"]),
 });
