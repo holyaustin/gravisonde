@@ -8,50 +8,36 @@ export function BenchmarkDownload() {
   const [lastRun, setLastRun] = useState<BenchmarkRun | null>(null);
   const [generating, setGenerating] = useState(false);
 
-  async function startBenchmark(durationSec: number) {
-    setGenerating(true);
-    try {
-      const res = await fetch("/api/benchmark", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ durationSec, pipeline: "cool", videoSource: "local-file" }),
-      });
-      if (!res.ok) throw new Error("Failed to start benchmark");
-      const { runId } = await res.json();
-      console.log(`Benchmark started: ${runId}`);
-      // Poll for completion (mock: simulate shortly)
-      setTimeout(() => {
-        fetch(`/api/benchmark?runId=${runId}`)
-          .then((r) => r.json())
-          .then((data) => {
-            setLastRun(data.run ?? null);
-          })
-          .catch(() => {});
-      }, 2000);
-    } catch (err) {
-      console.error("Benchmark error", err);
-    } finally {
-      setGenerating(false);
-    }
+async function startBenchmark(durationSec: number) {
+  setGenerating(true);
+  try {
+    const res = await fetch("/api/benchmark", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ durationSec, pipeline: "cool", videoSource: "local-file" }),
+    });
+    if (!res.ok) throw new Error("Failed to start benchmark");
+    const { runId } = await res.json();
+    const interval = setInterval(async () => {
+      const r = await fetch(`/api/benchmark?runId=${runId}`);
+      const d = await r.json();
+      if (d.ok && d.run) {
+        setLastRun(d.run);
+        clearInterval(interval);
+      }
+    }, 2000);
+  } catch (err) {
+    console.error("Benchmark error", err);
+  } finally {
+    setGenerating(false);
   }
+}
 
-  function exportCsv() {
-    // Export a sample CSV of recent metrics
-    const metrics = localStorage.getItem("gravisonde:recent-metrics");
-    let data = "";
-    if (metrics) {
-      const arr = JSON.parse(metrics);
-      data = arr.map((m: Record<string, unknown>, i: number) => `${i},${m.fps},${m.p50LatencyMs},${m.p99LatencyMs}`).join("\n");
-    }
-    if (!data) return;
-    const blob = new Blob([`index,fps,p50_ms,p99_ms\n${data}`], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `gravisonde-bench_${Date.now()}.csv`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 100);
-  }
+function exportCsv() {
+  if (!lastRun) return;
+  const url = `https://s3.amazonaws.com/${process.env.NEXT_PUBLIC_S3_BUCKET}/benchmarks/run-${lastRun.runId}.csv`;
+  window.open(url, "_blank");
+}
 
   return (
     <div className="space-y-4">
