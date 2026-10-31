@@ -4,20 +4,37 @@
     {
       "Sid": "WritePipelineLogs",
       "Effect": "Allow",
-      "Action": ["logs:CreateLogStream","logs:PutLogEvents","logs:DescribeLogStreams"],
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams"
+      ],
       "Resource": [
-        "arn:aws:logs:::log-group:/aws/gravisonde/pipeline",
-        "arn:aws:logs:::log-group:/aws/gravisonde/pipeline:*"
+        "arn:aws:logs:eu-north-1:578002509135:log-group:/aws/gravisonde/pipeline",
+        "arn:aws:logs:eu-north-1:578002509135:log-group:/aws/gravisonde/pipeline:*"
       ]
     },
     {
       "Sid": "BenchmarkBucket",
       "Effect": "Allow",
-      "Action": ["s3:PutObject","s3:GetObject","s3:ListBucket"],
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
       "Resource": [
-        "arn:aws:s3:::",
-        "arn:aws:s3:::/*"
+        "arn:aws:s3:::gravisonde",
+        "arn:aws:s3:::gravisonde/*"
       ]
+    },
+    {
+      "Sid": "PutMetrics",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:PutMetricData"
+      ],
+      "Resource": "*"
     }
   ]
 }
