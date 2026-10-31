@@ -275,7 +275,7 @@ class MetricsCollector:
 
     def _push_to_cw_metrics(self, metrics: List[FrameMetric]):
         """Push aggregated metrics to CloudWatch Metrics."""
-        if not metrics:
+        if not metrics or self._cw_metrics is None:
             return
 
         try:
@@ -356,7 +356,12 @@ class MetricsCollector:
             logger.debug(f"Pushed {len(metric_data)} metrics to CloudWatch Metrics")
 
         except Exception as e:
-            logger.warning(f"Failed to push to CloudWatch Metrics: {e}")
+            err_str = str(e)
+            if "AccessDenied" in err_str or "explicit deny" in err_str:
+                logger.warning(f"CloudWatch Metrics permanently disabled (SCP deny): {e}")
+                self._cw_metrics = None  # stop retrying
+            else:
+                logger.warning(f"Failed to push to CloudWatch Metrics: {e}")
 
     def start_benchmark(
         self,

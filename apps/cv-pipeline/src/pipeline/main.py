@@ -10,6 +10,7 @@ Usages:
 import argparse
 import time
 import logging
+import os
 import sys
 import cv2
 import numpy as np
@@ -21,6 +22,23 @@ from .metrics import init_collector, MetricsCollector, FrameMetric
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
+
+
+def _resolve_model_path(model_name: str) -> str:
+    """Return an absolute path for model_name, checking known mount locations."""
+    if os.path.isabs(model_name) and os.path.exists(model_name):
+        return model_name
+    search_dirs = [
+        "/apps/cv-pipeline",
+        "/app",
+        "/",
+        os.getcwd(),
+    ]
+    for d in search_dirs:
+        candidate = os.path.join(d, model_name)
+        if os.path.exists(candidate):
+            return candidate
+    return model_name  # return as-is; Detector will warn about missing file
 
 
 def run_pipeline(
@@ -36,6 +54,7 @@ def run_pipeline(
     push_interval_sec: int = 10,
     dashboard_endpoint: str | None = None,
     duration_sec: int | None = None,
+    model_path: str | None = None,
 ):
     """Run the full benchmark pipeline.
 
@@ -72,7 +91,10 @@ def run_pipeline(
         return
 
     # Initialize the detector
-    detector = Detector(conf_threshold=0.5, nms_threshold=0.4, use_lightglue_matcher=True)
+    resolved_model = _resolve_model_path(
+        model_path or os.getenv("DETECTION_MODEL", "yolo11n.onnx")
+    )
+    detector = Detector(model_path=resolved_model, conf_threshold=0.5, nms_threshold=0.4, use_lightglue_matcher=True)
 
     # Start benchmark if duration specified
     run_id = None
@@ -145,6 +167,7 @@ def main():
     parser.add_argument("--push-interval", type=int, default=10, help="Metrics emission interval (sec)")
     parser.add_argument("--dashboard-endpoint", default=None, help="HTTP endpoint for live dashboard metrics")
     parser.add_argument("--duration", type=int, default=None, help="Run benchmark for N seconds then exit")
+    parser.add_argument("--model-path", default=None, help="Path to ONNX detection model (overrides DETECTION_MODEL env var)")
     args = parser.parse_args()
 
     run_pipeline(
@@ -160,6 +183,7 @@ def main():
         push_interval_sec=args.push_interval,
         dashboard_endpoint=args.dashboard_endpoint,
         duration_sec=args.duration,
+        model_path=args.model_path,
     )
 
 
