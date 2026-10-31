@@ -15,13 +15,13 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_AWS_REGION=us-east-1
+      - NEXT_PUBLIC_AWS_REGION=eu-north-1
       - NEXT_PUBLIC_CW_LOG_GROUP=/aws/gravisonde/pipeline
       - NEXT_PUBLIC_INSTANCE_TYPE=c8g.xlarge
       - NEXT_PUBLIC_HOURLY_COST_USD=0.136
       - NEXT_PUBLIC_S3_BUCKET=gravisonde-benchmarks-local
       - AWS_ENDPOINT_URL=http://localstack:4566
-      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_DEFAULT_REGION=eu-north-1
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
     depends_on:
@@ -40,7 +40,7 @@ services:
     command: ["python", "-m", "src.pipeline.main", "--dashboard-endpoint", "http://dashboard:3000/api/metrics"]
     environment:
       - VIDEO_SOURCE=/data/sample.mp4
-      - AWS_REGION=us-east-1
+      - AWS_REGION=eu-north-1
       - CW_LOG_GROUP=/aws/gravisonde/pipeline
       - S3_BENCHMARK_BUCKET=gravisonde-benchmarks-local
       - PIPELINE_MODE=cool
