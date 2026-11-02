@@ -155,10 +155,10 @@ generate_video "paper2_detection_heavy" \
     "$VIDEOS_BASE/paper2/detection_heavy.mp4" \
     "drawbox=x='50+mod(t*50\,500)':y=100:w=60:h=60:color=red@0.7:t=fill,drawbox=x='150+mod(t*70\,450)':y=150:w=60:h=60:color=blue@0.7:t=fill,drawbox=x='250+mod(t*90\,400)':y=200:w=60:h=60:color=green@0.7:t=fill,drawtext=text='Detection Heavy':fontsize=18:x=10:y=10:fontcolor=white:box=1:boxcolor=black@0.5"
 
-# Use mandelbrot for feature-heavy (requires special source)
-log "INFO" "Generating paper2_feature_heavy (mandelbrot fractal)..."
-ffmpeg -f lavfi -i mandelbrot=duration=300:size=640x480:rate=30 \
-    -vf "drawtext=text='Feature Heavy':fontsize=20:x=10:y=10:fontcolor=white:box=1:boxcolor=black@0.5" \
+# Use noise pattern for feature-heavy (high texture content)
+log "INFO" "Generating paper2_feature_heavy (noise pattern)..."
+ffmpeg -f lavfi -i testsrc=duration=300:size=640x480:rate=30 \
+    -vf "noise=alls=20:allf=t+u,drawtext=text='Feature Heavy':fontsize=20:x=10:y=10:fontcolor=white:box=1:boxcolor=black@0.5" \
     -c:v libx264 -preset fast -y "$VIDEOS_BASE/paper2/feature_heavy.mp4" \
     > /dev/null 2>&1
 log "INFO" "✓ paper2_feature_heavy created"
@@ -170,9 +170,9 @@ generate_video "paper2_balanced" \
 # Paper 3: Feature Detectors (4 videos)
 log "INFO" "Paper 3: Feature Detector Comparison Videos"
 
-log "INFO" "Generating paper3_high_texture (mandelbrot)..."
-ffmpeg -f lavfi -i mandelbrot=duration=300:size=640x480:rate=30 \
-    -vf "drawtext=text='High Texture':fontsize=20:x=10:y=10:fontcolor=white:box=1:boxcolor=black@0.5" \
+log "INFO" "Generating paper3_high_texture (noise pattern)..."
+ffmpeg -f lavfi -i testsrc=duration=300:size=640x480:rate=30 \
+    -vf "noise=alls=30:allf=t+u,drawtext=text='High Texture':fontsize=20:x=10:y=10:fontcolor=white:box=1:boxcolor=black@0.5" \
     -c:v libx264 -preset fast -y "$VIDEOS_BASE/paper3/high_texture.mp4" \
     > /dev/null 2>&1
 log "INFO" "✓ paper3_high_texture created"
@@ -227,8 +227,9 @@ sleep 2
 # =============================================================================
 # Step 4: Run Benchmarks
 # =============================================================================
-update_status "Step 4/5: Running benchmarks (20 tests × 5 min = ~100 minutes)"
-log "INFO" "Starting benchmark runs..."
+update_status "Step 4/5: Running benchmarks (10 x86 tests × 5 min = ~50 minutes)"
+log "INFO" "Starting benchmark runs (x86-only for Papers 2 & 3)..."
+log "INFO" "ARM tests will be run later on real Graviton4 hardware for Paper 1"
 
 # Define test matrix
 declare -A PAPERS
@@ -238,17 +239,17 @@ PAPERS=(
     ["paper3"]="high_texture low_texture lighting_change motion_blur"
 )
 
-PLATFORMS=("x86" "arm")
+PLATFORMS=("x86")  # ARM disabled - will run on real Graviton4 later
 TOTAL_TESTS=0
 COMPLETED_TESTS=0
 
 # Count total tests
 for paper in "${!PAPERS[@]}"; do
     video_count=$(echo ${PAPERS[$paper]} | wc -w)
-    TOTAL_TESTS=$((TOTAL_TESTS + video_count * 2))  # × 2 for x86 and ARM
+    TOTAL_TESTS=$((TOTAL_TESTS + video_count * 1))  # × 1 for x86-only
 done
 
-log "INFO" "Total tests to run: $TOTAL_TESTS"
+log "INFO" "Total tests to run: $TOTAL_TESTS (x86-only)"
 log "INFO" "Estimated time: $((TOTAL_TESTS * BENCHMARK_DURATION / 60)) minutes"
 
 # Function to run a single benchmark
@@ -380,13 +381,6 @@ sleep 10
 for paper in "${!PAPERS[@]}"; do
     for video_name in ${PAPERS[$paper]}; do
         for platform in "${PLATFORMS[@]}"; do
-            # Skip ARM if buildx not available
-            if [ "$platform" = "arm" ] && [ "$USE_BUILDX" != true ]; then
-                log "WARN" "Skipping ARM test (buildx not available)"
-                COMPLETED_TESTS=$((COMPLETED_TESTS + 1))
-                continue
-            fi
-
             run_benchmark "$paper" "$video_name" "$platform"
         done
     done
@@ -420,9 +414,9 @@ for paper in "${!PAPERS[@]}"; do
     echo "${paper}:" >> "$SUMMARY_FILE"
     for video_name in ${PAPERS[$paper]}; do
         for platform in "${PLATFORMS[@]}"; do
-            local result_file=$(ls "$RESULTS_BASE/${paper}/${platform}/${video_name}"*.csv 2>/dev/null | head -n 1)
+            result_file=$(ls "$RESULTS_BASE/${paper}/${platform}/${video_name}"*.csv 2>/dev/null | head -n 1)
             if [ -f "$result_file" ]; then
-                local line_count=$(wc -l < "$result_file")
+                line_count=$(wc -l < "$result_file")
                 echo "  ✓ ${video_name} (${platform}): $((line_count - 1)) frames" >> "$SUMMARY_FILE"
             else
                 echo "  ✗ ${video_name} (${platform}): No data" >> "$SUMMARY_FILE"

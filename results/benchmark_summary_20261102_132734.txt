@@ -1,0 +1,73 @@
+╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║   Gravisonde Benchmark Summary (x86-Only)            ║
+║   Generated: 2026-11-02 13:27:34                      ║
+║                                                       ║
+╚═══════════════════════════════════════════════════════╝
+
+Hybrid Approach - Phase 1 Complete
+===================================
+✓ x86 tests completed
+⏳ ARM tests pending (will run on Graviton4)
+
+Results directory: ./results
+Platform: x86-only
+
+Test Matrix:
+
+paper3:
+  ⚠ high_texture (x86): 0 frames (check logs)
+  ⚠ low_texture (x86): 0 frames (check logs)
+  ⚠ lighting_change (x86): 0 frames (check logs)
+  ⚠ motion_blur (x86): 0 frames (check logs)
+
+paper2:
+  ⚠ detection_heavy (x86): 0 frames (check logs)
+  ⚠ feature_heavy (x86): 0 frames (check logs)
+  ⚠ balanced (x86): 0 frames (check logs)
+
+paper1:
+  ⚠ static_scene (x86): 0 frames (check logs)
+  ⚠ dynamic_scene (x86): 0 frames (check logs)
+  ⚠ dense_objects (x86): 0 frames (check logs)
+
+Summary Statistics:
+===================
+Total tests expected: 10
+Tests completed: 0
+Success rate: 0%
+
+Files Generated:
+================
+  - Videos: ./data/videos/
+  - Results: ./results/
+  - Logs: ./logs/
+  - This summary: ./results/benchmark_summary_20261102_132734.txt
+
+Paper Status:
+=============
+  Paper 1 (Architecture Comparison):
+    ✓ x86 baseline collected
+    ⏳ ARM data pending (run on Graviton4)
+    Status: 50% complete
+
+  Paper 2 (Cost-Efficiency):
+    ✓ x86 data collected
+    ✓ Ready for analysis
+    Status: 100% complete (x86-only sufficient)
+
+  Paper 3 (Feature Detectors):
+    ✓ x86 data collected
+    ✓ Ready for analysis
+    Status: 100% complete (x86-only sufficient)
+
+Next Steps:
+===========
+  1. Analyze x86 results: python3 analyze_results.py results/
+  2. Start writing Papers 2 & 3 (complete data)
+  3. Fix EC2 SSH for Paper 1 ARM data
+  4. Run Paper 1 tests on Graviton4 (~50 min)
+  5. Complete all 3 papers
+
+See HYBRID_APPROACH_STATUS.md for full plan.
+

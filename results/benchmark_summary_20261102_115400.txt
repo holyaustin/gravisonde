@@ -1,0 +1,14 @@
+╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║   Gravisonde Benchmark Summary                       ║
+║   Generated: 2026-11-02 11:54:00                      ║
+║                                                       ║
+╚═══════════════════════════════════════════════════════╝
+
+Total tests run: 10
+Duration: 300s per test
+Results directory: ./results
+
+Test Matrix:
+
+paper3:

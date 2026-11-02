@@ -33,3 +33,10 @@ localstack_data/
 .claude/
 
 wheels/
+data/videos/paper2/balanced.mp4
+data/videos/paper2/detection_heavy.mp4
+data/videos/paper2/feature_heavy.mp4
+data/videos/paper3/high_texture.mp4
+data/videos/paper3/lighting_change.mp4
+data/videos/paper3/low_texture.mp4
+data/videos/paper3/motion_blur.mp4
