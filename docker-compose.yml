@@ -52,6 +52,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=test
     volumes:
       - ./data/sample1.mp4:/data/sample.mp4:ro
+      - ./data/yolo11n.onnx:/app/yolo11n.onnx:ro
     depends_on:
       - localstack
     restart: unless-stopped
