@@ -1,0 +1,57 @@
+Gravisonde Paper 1 Benchmark Results
+=====================================
+Date: Tue Nov  3 19:20:17 UTC 2026
+Duration per test: 300s
+Instance Type: c8g.xlarge (Graviton4)
+Videos tested: 3
+Pipelines tested: cool, stock
+
+
+Summary of Results
+==================
+
+
+dense_objects (cool):
+  Frames: 1
+  Avg FPS: 0.0
+  CSV: /home/ec2-user/gravisonde/results/paper1_benchmark/csv/cool/dense_objects_cool_20261103_192017.csv
+
+dense_objects (stock):
+  Frames: 1
+  Avg FPS: 0.0
+  CSV: /home/ec2-user/gravisonde/results/paper1_benchmark/csv/stock/dense_objects_stock_20261103_192017.csv
+
+static_scene (cool):
+  Frames: 1
+  Avg FPS: 0.0
+  CSV: /home/ec2-user/gravisonde/results/paper1_benchmark/csv/cool/static_scene_cool_20261103_192017.csv
+
+static_scene (stock):
+  Frames: 1
+  Avg FPS: 0.0
+  CSV: /home/ec2-user/gravisonde/results/paper1_benchmark/csv/stock/static_scene_stock_20261103_192017.csv
+
+dynamic_scene (cool):
+  Frames: 1
+  Avg FPS: 0.0
+  CSV: /home/ec2-user/gravisonde/results/paper1_benchmark/csv/cool/dynamic_scene_cool_20261103_192017.csv
+
+dynamic_scene (stock):
+  Frames: 1
+  Avg FPS: 0.0
+  CSV: /home/ec2-user/gravisonde/results/paper1_benchmark/csv/stock/dynamic_scene_stock_20261103_192017.csv
+
+Completed: Tue Nov  3 19:52:03 UTC 2026
+Total runs completed: 6
+
+Files generated:
+  📊 Summary CSV: /home/ec2-user/gravisonde/results/paper1_benchmark/summary/paper1_results_20261103_192017.csv
+  📝 Summary TXT: /home/ec2-user/gravisonde/results/paper1_benchmark/summary/paper1_summary_20261103_192017.txt
+  📈 CSV files: /home/ec2-user/gravisonde/results/paper1_benchmark/csv/
+  📋 Logs: /home/ec2-user/gravisonde/results/paper1_benchmark/logs/
+
+Next steps:
+  1. Download results to local machine
+  2. Analyze with analyze_results.py
+  3. Generate plots and academic paper figures
+

@@ -1,0 +1,8 @@
+Gravisonde Paper 1 Benchmark Results
+=====================================
+Date: Tue Nov  3 17:58:06 UTC 2026
+Duration per test: 300s
+Instance Type: c8g.xlarge (Graviton4)
+Videos tested: 3
+Pipelines tested: cool, stock
+

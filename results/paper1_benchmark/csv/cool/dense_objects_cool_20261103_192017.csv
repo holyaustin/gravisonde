@@ -1,0 +1,2 @@
+frame_id,timestamp,latency_ms,inference_ms,detections
+2026-11-03 19:25:19,803 INFO __main__: Benchmark complete: 1.62 fps, 1948 detections
